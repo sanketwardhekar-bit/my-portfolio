@@ -14,14 +14,14 @@ export default function ProjectSlideOver() {
     const projectId = hydrated ? sp.get("project") : null;
     const open = Boolean(projectId);
 
-    // Pull the rendered HTML content from the hidden div
+    // read rendered HTML from hidden div
     const html = useMemo(() => {
         if (!open || !projectId || typeof window === "undefined") return null;
         const el = document.getElementById(`proj-${projectId}`);
         return el ? el.innerHTML : null;
     }, [open, projectId]);
 
-    // ✅ Pull the human title (project title) from data-title
+    // human title from data-title
     const title = useMemo(() => {
         if (!open || !projectId || typeof window === "undefined") return "Details";
         const el = document.getElementById(`proj-${projectId}`);
@@ -32,18 +32,47 @@ export default function ProjectSlideOver() {
     useEffect(() => {
         if (!open) return;
         const onKey = (e: KeyboardEvent) => {
-            if (e.key === "Escape") router.push(pathname);
+            if (e.key === "Escape") router.push(pathname, { scroll: false });
         };
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
     }, [open, pathname, router]);
+
+    // ✅ Lock background scroll & preserve position
+    useEffect(() => {
+        if (!open || typeof window === "undefined") return;
+
+        const y = window.scrollY;
+        const body = document.body;
+
+        // freeze layout at current scroll position
+        body.style.position = "fixed";
+        body.style.top = `-${y}px`;
+        body.style.left = "0";
+        body.style.right = "0";
+        body.style.width = "100%";
+        body.style.overflow = "hidden";
+
+        return () => {
+            // restore scroll & body styles
+            body.style.position = "";
+            body.style.top = "";
+            body.style.left = "";
+            body.style.right = "";
+            body.style.width = "";
+            body.style.overflow = "";
+            window.scrollTo(0, y);
+        };
+    }, [open]);
+
+    const close = () => router.push(pathname, { scroll: false });
 
     return (
         <>
             {/* Backdrop */}
             <div
                 aria-hidden="true"
-                onClick={() => router.push(pathname)}
+                onClick={close}
                 className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ease-out
           ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
             />
@@ -56,21 +85,14 @@ export default function ProjectSlideOver() {
                 role="dialog"
                 aria-modal="true"
             >
-                {/* Header with multi-line title */}
+                {/* Header */}
                 <div className="px-4 py-3 border-b">
                     <div className="flex items-start justify-between gap-3">
-                        <h3
-                            className="
-                font-semibold
-                text-base sm:text-lg
-                leading-snug
-                whitespace-normal break-words
-              "
-                        >
+                        <h3 className="font-semibold text-base sm:text-lg leading-snug whitespace-normal break-words">
                             {title}
                         </h3>
                         <button
-                            onClick={() => router.push(pathname)}
+                            onClick={close}
                             className="shrink-0 rounded-md border bg-card px-3 py-1.5 text-sm hover:bg-accent"
                         >
                             Close

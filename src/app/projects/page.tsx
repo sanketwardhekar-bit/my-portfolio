@@ -2,6 +2,7 @@
 import CodeDialog from "@/components/CodeDialog";
 import ProjectSlideOver from "@/components/ProjectSlideOver";
 import { Suspense } from "react";
+import Link from "next/link";
 
 export const metadata = {
     title: "Work & Projects — Sanket Wardhekar",
@@ -749,9 +750,16 @@ export default function Page() {
         <main className="max-w-[100rem] mx-auto px-6 lg:px-8 py-12">
             <section className="space-y-6">
                 {items.map((it) => (
-                    <div key={it.id} className="rounded-3xl border bg-card/70 shadow-sm overflow-hidden hover:shadow-lg transition">
+                    <div
+                        key={it.id}
+                        className="rounded-3xl border bg-card/70 shadow-sm overflow-hidden hover:shadow-lg transition"
+                    >
                         {/* Card header row (click opens slide-over via query param) */}
-                        <a href={`?project=${it.id}`} className="block p-5 pb-4">
+                        <Link
+                            href={{ pathname: "/projects", query: { project: it.id } }}
+                            scroll={false}
+                            className="block p-5 pb-4"
+                        >
                             <div className="grid items-start gap-2 md:grid-cols-[1fr_auto]">
                                 <div className="min-w-0">
                                     <div className="flex items-center gap-3 sm:gap-4">
@@ -771,11 +779,11 @@ export default function Page() {
                                         <TypeBadge kind={it.kind} />
                                         <h2
                                             className="
-                                            font-semibold
-                                            text-lg sm:text-xl md:text-2xl
-                                            leading-snug
-                                            whitespace-normal break-words
-                                          "
+                        font-semibold
+                        text-lg sm:text-xl md:text-2xl
+                        leading-snug
+                        whitespace-normal break-words
+                      "
                                         >
                                             {it.title}
                                         </h2>
@@ -789,19 +797,19 @@ export default function Page() {
                                 <div className="md:col-span-2">
                                     <p
                                         className="
-                                        mt-1
-                                        text-[0.95rem] sm:text-sm md:text-base
-                                        leading-6
-                                        text-muted-foreground
-                                        whitespace-normal break-words
-                                      "
+                      mt-1
+                      text-[0.95rem] sm:text-sm md:text-base
+                      leading-6
+                      text-muted-foreground
+                      whitespace-normal break-words
+                    "
                                         title={it.summary}
                                     >
                                         {it.summary}
                                     </p>
                                 </div>
                             </div>
-                        </a>
+                        </Link>
 
                         {/* Hidden, server-rendered full content used by the slide-over */}
                         <div id={`proj-${it.id}`} className="hidden" data-title={it.title}>
@@ -817,10 +825,17 @@ export default function Page() {
                                 ) : (
                                     <RichContent blocks={it.content} />
                                 )}
+
                                 {it.links?.length ? (
                                     <div className="mt-6 flex flex-wrap gap-3">
                                         {it.links.map((l) => (
-                                            <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">
+                                            <a
+                                                key={l.href}
+                                                href={l.href}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="text-sm underline underline-offset-4"
+                                            >
                                                 {l.label}
                                             </a>
                                         ))}

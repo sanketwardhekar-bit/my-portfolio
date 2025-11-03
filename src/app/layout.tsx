@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Header />
 
                 {/* If your Header is sticky, give space so content isn't hidden under it */}
-                <main className="pt-14">
+                <main className="pt-10 md:pt-14">
                     {children}
                 </main>
 
