@@ -769,7 +769,16 @@ export default function Page() {
                                         ) : null}
 
                                         <TypeBadge kind={it.kind} />
-                                        <h2 className="text-xl md:text-2xl font-semibold leading-tight line-clamp-2 md:line-clamp-1">{it.title}</h2>
+                                        <h2
+                                            className="
+                                            font-semibold
+                                            text-lg sm:text-xl md:text-2xl
+                                            leading-snug
+                                            whitespace-normal break-words
+                                          "
+                                        >
+                                            {it.title}
+                                        </h2>
                                     </div>
                                 </div>
 
@@ -779,7 +788,13 @@ export default function Page() {
 
                                 <div className="md:col-span-2">
                                     <p
-                                        className="mt-1 text-sm text-muted-foreground leading-snug whitespace-nowrap overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                                        className="
+                                        mt-1
+                                        text-[0.95rem] sm:text-sm md:text-base
+                                        leading-6
+                                        text-muted-foreground
+                                        whitespace-normal break-words
+                                      "
                                         title={it.summary}
                                     >
                                         {it.summary}
