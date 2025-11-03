@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import { Analytics } from "@vercel/analytics/react";   // ← use /react
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,13 +19,13 @@ export const metadata = {
     title: "Sanket Wardhekar",
     description: "Portfolio of research, projects, publications, and writing.",
 };
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body>
-                <Header />
                 {children}
+                <Analytics />
+                <SpeedInsights />
             </body>
         </html>
     );
