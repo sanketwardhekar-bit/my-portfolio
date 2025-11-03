@@ -1,64 +1,41 @@
 ﻿"use client";
+import { useState } from "react";
 
-import { useState, useEffect, useRef } from "react";
-
-type Props = {
-    label?: string;
-    file: string;     // URL to an HTML-exported notebook (put in /public)
-    height?: number;  // px
-};
-
-export default function CodeModal({ label = "Code", file, height = 720 }: Props) {
+export default function CodeModal({
+    label = "View Code",
+    file,
+    height = 720,
+}: { label?: string; file: string; height?: number }) {
     const [open, setOpen] = useState(false);
-    const closeOnEsc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    const overlayRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (open) document.addEventListener("keydown", closeOnEsc);
-        return () => document.removeEventListener("keydown", closeOnEsc);
-    }, [open]);
-
     return (
         <>
-            {/* The trigger looks like a button */}
             <button
-                type="button"
                 onClick={() => setOpen(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition"
+                className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition"
             >
-                {label} <span className="text-white/90">▾</span>
+                {label}
             </button>
 
-            {/* Modal */}
             {open && (
                 <div
-                    ref={overlayRef}
-                    className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-                    onClick={(e) => {
-                        // close when clicking the overlay (but not the dialog)
-                        if (e.target === overlayRef.current) setOpen(false);
-                    }}
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50"
+                    onClick={() => setOpen(false)}
                 >
-                    <div className="relative w-full max-w-5xl rounded-2xl overflow-hidden bg-neutral-900 shadow-2xl ring-1 ring-white/10">
-                        {/* Header */}
-                        <div className="flex items-center justify-between px-4 py-2 bg-neutral-800 text-neutral-100">
-                            <div className="font-semibold">Notebook</div>
-                            <button
-                                type="button"
-                                onClick={() => setOpen(false)}
-                                className="rounded-md px-3 py-1 text-sm bg-neutral-700 hover:bg-neutral-600"
-                                aria-label="Close"
-                            >
-                                Close ✕
+                    <div
+                        className="bg-neutral-900 text-neutral-100 w-[95vw] max-w-5xl rounded-xl overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between px-4 py-2 border-b border-white/10">
+                            <div className="text-sm opacity-80">{file}</div>
+                            <button onClick={() => setOpen(false)} className="text-sm px-2 py-1 rounded bg-white/10 hover:bg-white/20">
+                                Close
                             </button>
                         </div>
-
-                        {/* Body */}
                         <iframe
-                            src={file}
-                            title="Notebook"
-                            className="w-full"
+                            src={file}                // IMPORTANT: the html file must be in /public (e.g., /Kriging.html)
+                            className="w-full border-0"
                             style={{ height }}
+                            title="Code Preview"
                         />
                     </div>
                 </div>

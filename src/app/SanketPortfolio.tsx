@@ -68,14 +68,11 @@ const HIGHLIGHT_SLIDES: Highlight[] = [
 
 // simple dark mode toggle (no animations)
 function useTheme() {
-  const [theme, setTheme] = useState<"light" | "dark">(() =>
-    (typeof window !== "undefined" && (localStorage.getItem("theme") as "light" | "dark")) ||
-    (typeof window !== "undefined" &&
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light")
-  );
+    const [theme, setTheme] = useState<"light" | "dark">(() => {
+        if (typeof window === "undefined") return "light";
+        const stored = localStorage.getItem("theme") as "light" | "dark" | null;
+        return stored === "dark" ? "dark" : "light";
+    });
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.documentElement.classList.toggle("dark", theme === "dark");

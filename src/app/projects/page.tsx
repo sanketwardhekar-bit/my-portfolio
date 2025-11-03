@@ -596,7 +596,7 @@ function RenderBlock(b: ContentBlock, key: number) {
                             <div className="text-base sm:text-lg md:text-xl font-semibold tracking-tight">
                                 {c.title}
                             </div>
-                            <p className="mt-0.5 text-sm sm:text-base text-muted-foreground leading-snug">
+                            <p className="mt-1 text-sm text-muted-foreground leading-snug whitespace-normal break-words">
                                 {c.desc}
                             </p>
 
@@ -717,7 +717,7 @@ export default function Page() {
                                         ) : null}
 
                                         <TypeBadge kind={it.kind} />
-                                        <h2 className="text-xl md:text-2xl font-semibold leading-tight truncate">{it.title}</h2>
+                                        <h2 className="text-xl md:text-2xl font-semibold leading-tight line-clamp-2 md:line-clamp-1">{it.title}</h2>
                                     </div>
                                 </div>
 
