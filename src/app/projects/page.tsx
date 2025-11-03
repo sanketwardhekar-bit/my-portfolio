@@ -1,5 +1,5 @@
 ﻿import Image from "next/image";
-import CodeModal from "@/components/CodeModal";
+import CodeDialog from "@/components/CodeDialog";
 import ProjectSlideOver from "@/components/ProjectSlideOver";
 import { Suspense } from "react";
 
@@ -39,6 +39,14 @@ type ContentBlock =
         rightCol?: boolean;
     })
     | ({ type: "cutter"; before: string; after: string; label?: string } & { fullWidth?: boolean; rightCol?: boolean })
+    | ({
+        type: "codeFrame";
+        src: string;        // e.g. "/Kriging.html" (must be in /public)
+        height?: number;    // px, default 720
+        title?: string;     // optional heading text above frame
+        fullWidth?: boolean;
+        rightCol?: boolean;
+    })
     | ({
         type: "grid5";
         cards: Array<{
@@ -262,14 +270,12 @@ const items: Item[] = [
                     "Polynomial regression consistently outperforms linear baselines while remaining lightweight and fast to evaluate.",
                 ],
             },
-
-            { type: "h3", text: "Regression Notebook" },
             {
-                type: "codeModal",
-                label: "View Code",
-                file: "/ML_Model.html",
+                type: "codeFrame",
+                src: "/ML_Model.html",
                 height: 720,
-            },
+                title: "Regression Notebook (HTML)",
+            }, ,
 
             {
                 type: "img",
@@ -386,10 +392,10 @@ const items: Item[] = [
                 className: "w-3/4 mx-auto",
             },
             {
-                type: "codeModal",
-                label: "View Code",
-                file: "/Kriging.html",
+                type: "codeFrame",
+                src: "/Kriging.html",
                 height: 720,
+                title: "Kriging Surrogate (HTML)",
             },
             {
                 type: "img",
@@ -620,10 +626,38 @@ function RenderBlock(b: ContentBlock, key: number) {
     if (b.type === "codeModal") {
         return (
             <div key={key} className="mt-3">
-                <CodeModal label={b.label} file={b.file} height={b.height ?? 720} />
+                <CodeDialog label={b.label} file={b.file} height={b.height ?? 720} />
             </div>
         );
     }
+
+    if (b.type === "codeFrame") {
+        const h = Math.max(360, b.height ?? 720);
+        return (
+            <figure key={key} className="rounded-2xl overflow-hidden border bg-card">
+                {b.title ? (
+                    <figcaption className="px-4 pt-3 pb-2 text-sm text-muted-foreground flex items-center justify-between">
+                        <span>{b.title}</span>
+                        <a
+                            href={b.src}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs underline underline-offset-4"
+                        >
+                            Open in new tab
+                        </a>
+                    </figcaption>
+                ) : null}
+                <iframe
+                    src={b.src}
+                    title={b.title ?? "Code"}
+                    className="w-full border-0"
+                    style={{ height: h }}
+                />
+            </figure>
+        );
+    }
+
 
     if (b.type === "table") {
         const dense: boolean = b.dense ?? false;
