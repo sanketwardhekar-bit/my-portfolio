@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import {
   Mail, Phone, Linkedin, ArrowUp, Sun, Moon, Tag, FileDown, Wrench, GraduationCap, FlaskConical,
   PhoneCall, ChevronLeft, ChevronRight, Sparkles, MapPin
