@@ -14,11 +14,18 @@ export default function ProjectSlideOver() {
     const projectId = hydrated ? sp.get("project") : null;
     const open = Boolean(projectId);
 
-    // Read server-rendered hidden HTML
+    // Pull the rendered HTML content from the hidden div
     const html = useMemo(() => {
         if (!open || !projectId || typeof window === "undefined") return null;
         const el = document.getElementById(`proj-${projectId}`);
         return el ? el.innerHTML : null;
+    }, [open, projectId]);
+
+    // ✅ Pull the human title (project title) from data-title
+    const title = useMemo(() => {
+        if (!open || !projectId || typeof window === "undefined") return "Details";
+        const el = document.getElementById(`proj-${projectId}`);
+        return el?.getAttribute("data-title") || "Details";
     }, [open, projectId]);
 
     // ESC to close
@@ -49,23 +56,34 @@ export default function ProjectSlideOver() {
                 role="dialog"
                 aria-modal="true"
             >
-                <div className="flex items-center justify-between px-4 py-3 border-b">
-                    <div className="font-semibold truncate pr-2">
-                        {projectId ?? "Details"}
+                {/* Header with multi-line title */}
+                <div className="px-4 py-3 border-b">
+                    <div className="flex items-start justify-between gap-3">
+                        <h3
+                            className="
+                font-semibold
+                text-base sm:text-lg
+                leading-snug
+                whitespace-normal break-words
+              "
+                        >
+                            {title}
+                        </h3>
+                        <button
+                            onClick={() => router.push(pathname)}
+                            className="shrink-0 rounded-md border bg-card px-3 py-1.5 text-sm hover:bg-accent"
+                        >
+                            Close
+                        </button>
                     </div>
-                    <button
-                        onClick={() => router.push(pathname)}
-                        className="rounded-md border bg-card px-3 py-1.5 text-sm hover:bg-accent"
-                    >
-                        Close
-                    </button>
                 </div>
 
+                {/* Body */}
                 <div className="overflow-y-auto h-[calc(100dvh-3.25rem)]">
                     {open && html ? (
                         <div className="px-5 pb-8 pt-4" dangerouslySetInnerHTML={{ __html: html }} />
                     ) : (
-                        <div className="px-5 py-8 text-sm text-muted-foreground"> </div>
+                        <div className="px-5 py-8 text-sm text-muted-foreground" />
                     )}
                 </div>
             </aside>

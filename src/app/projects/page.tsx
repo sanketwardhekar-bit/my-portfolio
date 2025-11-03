@@ -633,28 +633,46 @@ function RenderBlock(b: ContentBlock, key: number) {
 
     if (b.type === "codeFrame") {
         const h = Math.max(360, b.height ?? 720);
+
         return (
-            <figure key={key} className="rounded-2xl overflow-hidden border bg-card">
-                {b.title ? (
-                    <figcaption className="px-4 pt-3 pb-2 text-sm text-muted-foreground flex items-center justify-between">
-                        <span>{b.title}</span>
+            <details key={key} className="group rounded-2xl overflow-hidden border bg-card">
+                {/* clickable header */}
+                <summary className="flex items-center justify-between px-4 pt-3 pb-2 text-sm text-muted-foreground cursor-pointer list-none">
+                    <span className="truncate">{b.title ?? "Code"}</span>
+
+                    <div className="flex items-center gap-3">
+                        {/* state hint, changes automatically when open */}
+                        <span className="px-2 py-1 rounded bg-black/5 group-open:hidden">Show code</span>
+                        <span className="px-2 py-1 rounded bg-black/5 hidden group-open:inline">Hide code</span>
+
+                        {/* always works: plain link */}
                         <a
                             href={b.src}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-xs underline underline-offset-4"
+                            className="px-2 py-1 rounded bg-black/5 hover:bg-black/10"
+                            title="Open in new tab"
                         >
                             Open in new tab
                         </a>
-                    </figcaption>
-                ) : null}
-                <iframe
-                    src={b.src}
-                    title={b.title ?? "Code"}
-                    className="w-full border-0"
-                    style={{ height: h }}
-                />
-            </figure>
+                    </div>
+                </summary>
+
+                {/* collapsible body */}
+                <div className="
+          max-h-0 overflow-hidden transition-[max-height] duration-300 ease-out
+          group-open:max-h-[90vh] border-t border-black/5
+        ">
+                    {/* user can also drag to resize when open */}
+                    <div className="resize-y overflow-auto" style={{ height: h }}>
+                        <iframe
+                            src={b.src}
+                            title={b.title ?? "Code"}
+                            className="w-full h-full border-0"
+                        />
+                    </div>
+                </div>
+            </details>
         );
     }
 
