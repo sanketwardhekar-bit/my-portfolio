@@ -275,7 +275,7 @@ const items: Item[] = [
                 src: "/ML_Model.html",
                 height: 720,
                 title: "Regression Notebook (HTML)",
-            }, ,
+            },
 
             {
                 type: "img",
